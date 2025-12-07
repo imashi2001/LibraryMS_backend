@@ -23,5 +23,9 @@ public class AddBookRequest {
     private Integer totalCopies;
     
     private String description;
+    
+    private String genre;
+    
+    private String language;
 }
 

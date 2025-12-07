@@ -63,6 +63,8 @@ public class LibrarianService {
         book.setAvailableCopies(request.getTotalCopies());
         book.setStatus(BookStatus.AVAILABLE);
         book.setDescription(request.getDescription());
+        book.setGenre(request.getGenre());
+        book.setLanguage(request.getLanguage() != null ? request.getLanguage() : "English");
         
         Book savedBook = bookRepository.save(book);
         return mapToBookResponse(savedBook);
@@ -128,6 +130,8 @@ public class LibrarianService {
         response.setTotalCopies(book.getTotalCopies());
         response.setAvailableCopies(book.getAvailableCopies());
         response.setDescription(book.getDescription());
+        response.setGenre(book.getGenre());
+        response.setLanguage(book.getLanguage());
         response.setCreatedAt(book.getCreatedAt());
         response.setUpdatedAt(book.getUpdatedAt());
         return response;

@@ -20,6 +20,8 @@ public class BookResponse {
     private Integer totalCopies;
     private Integer availableCopies;
     private String description;
+    private String genre;
+    private String language;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }
