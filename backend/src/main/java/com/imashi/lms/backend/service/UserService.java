@@ -12,6 +12,7 @@ import com.imashi.lms.backend.exception.UnauthorizedException;
 import com.imashi.lms.backend.repository.BookRepository;
 import com.imashi.lms.backend.repository.ReservationRepository;
 import com.imashi.lms.backend.repository.UserRepository;
+import com.imashi.lms.backend.service.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -34,6 +35,9 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
     
+    @Autowired
+    private EmailService emailService;
+    
     // Get current authenticated user
     private User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -47,8 +51,8 @@ public class UserService {
     }
     
     // Get all books with filtering
-    public List<BookResponse> getAllBooks(Long categoryId, String author, String genre, String language) {
-        List<Book> books = bookRepository.findBooksWithFilters(categoryId, author, genre, language);
+    public List<BookResponse> getAllBooks(Long categoryId, String author, String genre, String language, String title) {
+        List<Book> books = bookRepository.findBooksWithFilters(categoryId, author, genre, language, title);
         return books.stream()
                 .map(this::mapToBookResponse)
                 .collect(Collectors.toList());
@@ -107,6 +111,14 @@ public class UserService {
         }
         bookRepository.save(book);
         
+        // Send reservation confirmation email
+        try {
+            emailService.sendReservationConfirmation(user, book, savedReservation);
+        } catch (Exception e) {
+            // Log but don't fail the reservation if email fails
+            System.err.println("Failed to send reservation confirmation email: " + e.getMessage());
+        }
+        
         return mapToReservationResponse(savedReservation);
     }
     
@@ -125,6 +137,7 @@ public class UserService {
         response.setDescription(book.getDescription());
         response.setGenre(book.getGenre());
         response.setLanguage(book.getLanguage());
+        response.setImageUrl(book.getImageUrl());
         response.setCreatedAt(book.getCreatedAt());
         response.setUpdatedAt(book.getUpdatedAt());
         return response;
@@ -156,10 +169,17 @@ public class UserService {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
+        response.setName(user.getName());
         response.setRole(user.getRole());
         response.setIsBlacklisted(user.getIsBlacklisted());
         response.setCreatedAt(user.getCreatedAt());
         return response;
+    }
+    
+    // Get current user profile
+    public UserResponse getCurrentUserProfile() {
+        User user = getCurrentUser();
+        return mapToUserResponse(user);
     }
 }
 

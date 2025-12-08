@@ -11,6 +11,8 @@ import com.imashi.lms.backend.exception.UnauthorizedException;
 import com.imashi.lms.backend.repository.BookRepository;
 import com.imashi.lms.backend.repository.CategoryRepository;
 import com.imashi.lms.backend.repository.UserRepository;
+
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,6 +31,15 @@ public class LibrarianService {
     @Autowired
     private UserRepository userRepository;
     
+    // Get all users (LIBRARIAN only)
+    public List<UserResponse> getAllUsers() {
+        checkLibrarianRole();
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(this::mapToUserResponse)
+                .collect(java.util.stream.Collectors.toList());
+    }
+    
     // Helper method to check if current user is librarian
     private void checkLibrarianRole() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -40,7 +51,7 @@ public class LibrarianService {
     
     // Add new book
     @Transactional
-    public BookResponse addBook(AddBookRequest request) {
+    public BookResponse addBook(AddBookRequest request, String imageUrl) {
         checkLibrarianRole();
         
         // Check if ISBN already exists
@@ -65,6 +76,7 @@ public class LibrarianService {
         book.setDescription(request.getDescription());
         book.setGenre(request.getGenre());
         book.setLanguage(request.getLanguage() != null ? request.getLanguage() : "English");
+        book.setImageUrl(imageUrl);
         
         Book savedBook = bookRepository.save(book);
         return mapToBookResponse(savedBook);
@@ -132,6 +144,7 @@ public class LibrarianService {
         response.setDescription(book.getDescription());
         response.setGenre(book.getGenre());
         response.setLanguage(book.getLanguage());
+        response.setImageUrl(book.getImageUrl());
         response.setCreatedAt(book.getCreatedAt());
         response.setUpdatedAt(book.getUpdatedAt());
         return response;
@@ -150,6 +163,7 @@ public class LibrarianService {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
+        response.setName(user.getName());
         response.setRole(user.getRole());
         response.setIsBlacklisted(user.getIsBlacklisted());
         response.setCreatedAt(user.getCreatedAt());
