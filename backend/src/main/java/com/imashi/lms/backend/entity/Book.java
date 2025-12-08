@@ -56,6 +56,9 @@ public class Book {
     @Column(length = 50)
     private String language = "English";
     
+    @Column(length = 500)
+    private String imageUrl;
+    
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
     

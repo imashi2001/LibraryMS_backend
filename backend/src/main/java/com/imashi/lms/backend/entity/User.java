@@ -27,6 +27,10 @@ public class User {
 
     @NotBlank
     @Column(nullable = false)
+    private String name;
+
+    @NotBlank
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)

@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.http.HttpMethod;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,7 +57,10 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/health").permitAll()
+                        .requestMatchers("/api/auth/**", "/api/health", "/api/test/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/categories", "/api/categories/*").permitAll() // Public GET access to categories
+                        .requestMatchers(HttpMethod.GET, "/api/files/**").permitAll() // Public access to uploaded images
+                        .requestMatchers(HttpMethod.GET, "/api/books", "/api/books/*").permitAll() // Public GET access to book listings
                         .anyRequest().authenticated()
                 );
 

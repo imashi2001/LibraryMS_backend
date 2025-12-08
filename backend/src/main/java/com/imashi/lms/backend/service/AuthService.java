@@ -42,6 +42,7 @@ public class AuthService {
         // Create new user
         User user = new User();
         user.setEmail(request.getEmail());
+        user.setName(request.getName());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(request.getRole());
         user.setIsBlacklisted(false);
@@ -53,7 +54,7 @@ public class AuthService {
         String token = jwtTokenProvider.generateToken(savedUser.getId(), savedUser.getEmail(), savedUser.getRole());
 
         // Return response
-        return new AuthResponse(token, savedUser.getEmail(), savedUser.getRole(), savedUser.getId());
+        return new AuthResponse(token, savedUser.getEmail(), savedUser.getName(), savedUser.getRole(), savedUser.getId());
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -78,7 +79,7 @@ public class AuthService {
             String token = jwtTokenProvider.generateToken(user.getId(), user.getEmail(), user.getRole());
 
             // Return response
-            return new AuthResponse(token, user.getEmail(), user.getRole(), user.getId());
+            return new AuthResponse(token, user.getEmail(), user.getName(), user.getRole(), user.getId());
         } catch (BadCredentialsException e) {
             throw new BadCredentialsException("Invalid email or password", e);
         }

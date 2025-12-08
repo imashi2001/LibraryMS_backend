@@ -21,12 +21,14 @@ public interface BookRepository extends JpaRepository<Book, Long> {
            "(:categoryId IS NULL OR b.category.id = :categoryId) AND " +
            "(:author IS NULL OR LOWER(b.author) LIKE LOWER(CONCAT('%', :author, '%'))) AND " +
            "(:genre IS NULL OR LOWER(b.genre) LIKE LOWER(CONCAT('%', :genre, '%'))) AND " +
-           "(:language IS NULL OR LOWER(b.language) LIKE LOWER(CONCAT('%', :language, '%')))")
+           "(:language IS NULL OR LOWER(b.language) LIKE LOWER(CONCAT('%', :language, '%'))) AND " +
+           "(:title IS NULL OR LOWER(b.title) LIKE LOWER(CONCAT('%', :title, '%')))")
     List<Book> findBooksWithFilters(
         @Param("categoryId") Long categoryId,
         @Param("author") String author,
         @Param("genre") String genre,
-        @Param("language") String language
+        @Param("language") String language,
+        @Param("title") String title
     );
 }
 

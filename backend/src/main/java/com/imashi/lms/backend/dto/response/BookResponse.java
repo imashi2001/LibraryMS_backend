@@ -22,6 +22,7 @@ public class BookResponse {
     private String description;
     private String genre;
     private String language;
+    private String imageUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

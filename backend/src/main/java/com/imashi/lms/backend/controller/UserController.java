@@ -28,9 +28,10 @@ public class UserController {
             @RequestParam(required = false) Long categoryId,
             @RequestParam(required = false) String author,
             @RequestParam(required = false) String genre,
-            @RequestParam(required = false) String language) {
+            @RequestParam(required = false) String language,
+            @RequestParam(required = false) String title) {
         
-        List<BookResponse> books = userService.getAllBooks(categoryId, author, genre, language);
+        List<BookResponse> books = userService.getAllBooks(categoryId, author, genre, language, title);
         ApiResponse<List<BookResponse>> response = new ApiResponse<>(
             "SUCCESS", 
             "Books retrieved successfully", 
@@ -51,6 +52,17 @@ public class UserController {
             reservation
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+    
+    @GetMapping("/profile")
+    public ResponseEntity<ApiResponse<com.imashi.lms.backend.dto.response.UserResponse>> getProfile() {
+        com.imashi.lms.backend.dto.response.UserResponse userResponse = userService.getCurrentUserProfile();
+        ApiResponse<com.imashi.lms.backend.dto.response.UserResponse> response = new ApiResponse<>(
+            "SUCCESS",
+            "Profile retrieved successfully",
+            userResponse
+        );
+        return ResponseEntity.ok(response);
     }
 }
 
