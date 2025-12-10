@@ -6,6 +6,13 @@ pom.xml.versionsBackup
 pom.xml.next
 release.properties
 
+# Node.js (if using npm for any scripts)
+node_modules/
+package-lock.json
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
 # IntelliJ / Eclipse / VSCode
 .idea/
 *.iml
@@ -17,3 +24,13 @@ release.properties
 # OS
 .DS_Store
 Thumbs.db
+
+# Application logs
+*.log
+startup.log
+
+# Uploads directory (contains user-generated content)
+uploads/
+
+# Local configuration files
+application-local.properties
