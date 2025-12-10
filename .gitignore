@@ -13,13 +13,14 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# IntelliJ / Eclipse / VSCode
+# IntelliJ / Eclipse / VSCode / Cursor
 .idea/
 *.iml
 .project
 .classpath
 .settings/
 .vscode/
+.cursor/
 
 # OS
 .DS_Store
